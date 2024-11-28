@@ -6,136 +6,184 @@
     <meta name="description" content="Welcome to MegaCash - Your ultimate finance app.">
     <title>MegaCash</title>
     <style>
-        /* Resetting default margin and padding */
+        /* Global Reset */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
+        /* Body Styles */
         body {
             font-family: 'Poppins', sans-serif;
             color: #333;
-            background-image: url('budget_background.jpg'); /* Background image */
-            background-size: cover; /* Ensure the background image covers the entire page */
-            background-repeat: no-repeat; /* Prevent image repetition */
-            background-position: center; /* Center the background image */
+            background-image: linear-gradient(to right, rgba(75, 142, 141, 0.8), rgba(153, 102, 255, 0.2)), url('budget_background.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
             display: flex;
             flex-direction: column;
+            min-height: 100vh;
         }
 
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            color: #333;
-            display: flex; /* Make body a flex container */
-            flex-direction: column; /* Stack content vertically */
-        }
-
+        /* Header */
         header {
-            background-color: #4B8E8D;
+            background-color: rgba(0, 0, 0, 0.1);
             padding: 1rem 2rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
+
         .logo {
             display: flex;
             align-items: center;
         }
+
         .logo-icon {
             width: 50px;
             height: 50px;
-            background-color: #fff;
+            background-color: rgba(153, 102, 255, 0.4);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 0.5rem;
+            margin-right: 0.8rem;
         }
+
         .logo-icon span {
             font-size: 1.5rem;
             font-weight: bold;
             color: #4B8E8D;
         }
+
         .title {
-            font-size: 1.5rem;
-            color: #fff;
+            font-size: 1.8rem;
+            color: rgba(153, 102, 255, 0.4);
             font-weight: bold;
         }
+
         nav {
             display: flex;
-            gap: 1rem;
+            gap: 1.5rem;
         }
+
         nav a, nav .register-link {
-            color: #fff;
+            color: rgba(153, 102, 255, 0.2);
             text-decoration: none;
             font-weight: bold;
+            font-size: 1rem;
             transition: color 0.3s ease;
         }
+
         nav a:hover, nav .register-link:hover {
-            color: #FFD700;
+            color: #fff;
         }
+
         nav .register-link {
-            background-color: #FFD700;
-            color: #4B8E8D;
+            background-color: #4B8E8D;
+            color: #fff;
             padding: 0.5rem 1rem;
             border-radius: 5px;
         }
+
+        /* Main Content */
         main {
             flex: 1;
             text-align: center;
-            padding: 2rem;
+            padding: 3rem 2rem;
+            color: #fff;
         }
+
         h1 {
-            font-size: 2.5rem;
-            color: #4B8E8D;
-            margin-bottom: 1rem;
+            font-size: 3rem;
+            color: rgba(153, 102, 255, 0.4);
+            margin-bottom: 1.5rem;
         }
+
         p {
             font-size: 1.2rem;
-            color: #666;
+            color: #eaeaea;
             margin-bottom: 2rem;
+            line-height: 1.6;
         }
+
+        /* Features Section */
         .features {
             display: flex;
-            justify-content: space-around;
-            margin-top: 2rem;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
         }
+
         .feature {
-            width: 30%;
-            padding: 1rem;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            max-width: 300px;
+            padding: 1.5rem;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             text-align: center;
+            color: #333;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+
+        .feature:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
         .feature h2 {
             color: #4B8E8D;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
         }
+
+        .feature p {
+            font-size: 1rem;
+            color: #555;
+        }
+
+        /* Call to Action Section */
         .cta {
             margin-top: 3rem;
-            text-align: center;
         }
+
         .cta button {
-            padding: 0.8rem 1.5rem;
-            background-color: #4B8E8D;
-            color: #fff;
+            padding: 0.8rem 2rem;
+            background-color: rgba(153, 102, 255, 0.2);
+            color: #4B8E8D;
             border: none;
             border-radius: 5px;
-            font-size: 1rem;
+            font-size: 1.2rem;
             font-weight: bold;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
+
         .cta button:hover {
-            background-color: #3A7470;
-        }
-        footer {
-            background-color: #333;
+            background-color: #4B8E8D;
             color: #fff;
+            transform: translateY(-3px);
+        }
+
+        footer {
+            background-color: #45;
+            color: #aaa;
             text-align: center;
-            padding: 1rem;
+            padding: 1rem 2rem;
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: rgba(153, 102, 255, 0.4);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -148,40 +196,31 @@
             <span class="title">MegaCash</span>
         </div>
         <nav>
-            <a href="register.php" class="register-link">Register Now</a>
-            <a href="log_out.php" class="login-link">Login Now</a>
+            <a href="register.php" class="register-link">Register</a>
+            <a href="log_in.php" class="login-link">Login</a>
         </nav>
     </header>
     <main>
-        <h1>MegaCash</h1>
-        <p>Your ultimate finance management tool. Keep track of your finances with ease and style.</p>
-        <div id="features" class="features">
+        <h1>This is MegaCash</h1>
+        <p>Take control of your finances with MegaCash. Track expenses, set budget goals, and secure your future with ease.</p><br><br>
+        <div class="features">
             <div class="feature">
                 <h2>Track Expenses</h2>
                 <p>Monitor your spending habits and stay on top of your budget with real-time updates.</p>
             </div>
             <div class="feature">
-                <h2>Set Goals</h2>
-                <p>Define financial goals and track your progress towards achieving them.</p>
+                <h2>Set Budgets</h2>
+                <p>State defined budgets and track your progress towards achieving them.</p>
             </div>
             <div class="feature">
                 <h2>Secure Transactions</h2>
-                <p>Enjoy the highest level of security for all your financial transactions.</p>
+                <p>Enjoy the highest level of security for all your financial deals.</p>
             </div>
         </div>
-        <div id="about" class="cta">
-            <h2>About MegaCash</h2>
-            <p>We are committed to simplifying your financial management and helping you achieve your financial dreams. MegaCash combines ease of use with advanced tools to give you the best experience.</p>
-            <button>Learn More</button>
-        </div>
-        <div id="contact" class="cta">
-            <h2>Contact Us</h2>
-            <p>Have questions or feedback? We'd love to hear from you.</p>
-            <button>Contact Support</button>
-        </div>
+        
     </main>
     <footer>
-        &copy; 2024 MegaCash. All rights reserved.
+        &copy; 2024 MegaCash. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
     </footer>
 </body>
 </html>
