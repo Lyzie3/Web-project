@@ -54,16 +54,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['category'])) {
         $category = $_POST['custom_category'];
     }
     
-    // Insert the new budget into the database
-    $sql_insert = "INSERT INTO budget (category, amount, start_date, end_date, user_id) VALUES (?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql_insert);
-    $stmt->bind_param("sssss", $category, $amount, $start_date, $end_date, $user_id);
-    $stmt->execute();
-    $stmt->close();
-    
-    // Redirect to the same page to refresh the budget data
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit();
+    // Check if there's an overlapping budget for the same category and dates
+    $sql_check_overlap = "
+        SELECT * FROM budget
+        WHERE user_id = ? AND category = ? 
+        AND ((start_date BETWEEN ? AND ?) OR (end_date BETWEEN ? AND ?))
+    ";
+    $stmt_check = $conn->prepare($sql_check_overlap);
+    $stmt_check->bind_param("isssss", $user_id, $category, $start_date, $end_date, $start_date, $end_date);
+    $stmt_check->execute();
+    $result_check = $stmt_check->get_result();
+
+    if ($result_check->num_rows > 0) {
+        // Overlapping budget found, show error message
+        $error_message = "You already have a budget for this category within the selected date range.";
+    } else {
+        // No overlap, proceed with inserting the new budget
+        $sql_insert = "INSERT INTO budget (category, amount, start_date, end_date, user_id) VALUES (?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql_insert);
+        $stmt->bind_param("sssss", $category, $amount, $start_date, $end_date, $user_id);
+        $stmt->execute();
+        $stmt->close();
+
+        // After successfully updating a budget
+        $query = "INSERT INTO Notifications (user_id, message, type, created_at) VALUES (?, ?, 'budget', NOW())";
+        $message = "Your budget has been updated.";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("is", $user_id, $message);
+        $stmt->execute();
+
+        // Redirect to the same page to refresh the budget data
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+    }
 }
 
 // Close the database connection
@@ -82,7 +105,7 @@ $conn->close();
 body {
     font-family: 'Poppins', sans-serif;
     color: #333;
-    background-image: url('budget_background.jpg'); /* Background image */
+    background-image: url('homeimage.jpg'); /* Background image */
     background-size: cover; /* Ensure the background image covers the entire page */
     background-repeat: no-repeat; /* Prevent image repetition */
     background-position: center; /* Center the background image */
@@ -100,11 +123,11 @@ body {
 
 .container {
     flex: 1; /* Makes the container take the remaining space */
-    max-width: 900px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
     background-color: rgba(255, 255, 255, 0.5); /* Slight transparency */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
     border-radius: 8px;
 }
 
@@ -132,10 +155,39 @@ td {
     background-color: #f9f9f9; /* Light background for table cells */
 }
 
+/* Style for the custom error message alert */
+.custom-alert {
+    background-color: #f8d7da; /* Light red background */
+    color: #721c24; /* Dark red text */
+    border: 1px solid #f5c6cb; /* Light red border */
+    padding: 15px;
+    border-radius: 6px;
+    font-size: 1rem;
+    margin-top: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.custom-alert .alert-icon {
+    margin-right: 10px;
+}
+
+.custom-alert a {
+    color: #721c24; /* Dark red link color */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.custom-alert a:hover {
+    text-decoration: underline;
+}
+
 form {
     margin-top: 30px;
     padding: 20px;
-    background-color: rgba(255, 255, 255, 0.9); /* Slight transparency for form */
+    background-color: rgba(255, 255, 255, 0.8); /* Slight transparency for form */
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -284,16 +336,16 @@ footer .text-center {
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-              <a class="nav-link active" href="dashboard.php">Dashboard</a>
+              <a class="nav-link " href="dashboard.php">Dashboard</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="budget.php">Manage Budgets</a>
+              <a class="nav-link active" href="budget.php">MANAGE BUDGETS</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="expense.php">Expenses</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="reports.php">Reports</a>
+              <a class="nav-link" href="my_profile.php">Profile</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="settings.php">Settings</a>
@@ -306,11 +358,7 @@ footer .text-center {
       </div>
     </nav>
 
-    <!-- Image Section -->
-    <div class="image-section" style="text-align: center; margin: 20px 0;">
-        <img src="half_money.jpg" alt="Financial Management Image" style="width: 85%; height: 500px; border-radius: 8px;">
-    </div>
-
+    
 
     <div class="container">
         <h1>Manage Your Budgets</h1>
@@ -334,12 +382,14 @@ footer .text-center {
             <label for="category">Category</label>
             <select name="category" id="category" required onchange="toggleCustomCategory()">
                 <option value="">Select a category</option>
-                <option value="Other">Other (Custom)</option>
-                <option value="Groceries">Groceries</option>
+                <option value="housing">Housing</option>
+                <option value="food">Food</option>
+                <option value="health">Health</option>
                 <option value="Entertainment">Entertainment</option>
                 <option value="Utilities">Utilities</option>
                 <option value="Transportation">Transportation</option>
                 <option value="Savings">Savings</option>
+                <option value="Other">Other (Custom)</option>
             </select>
 
             <div id="custom_category_div">
@@ -356,8 +406,27 @@ footer .text-center {
             <label for="end_date">End Date</label>
             <input type="date" name="end_date" id="end_date" required>
 
-            <button type="submit">Save Budget</button>
+            <button type="submit">Save Budget</button><br>
         </form>
+
+        <?php if (!empty($error_message)): ?>
+    <div id="error-alert" class="alert alert-danger custom-alert" role="alert">
+        <span class="alert-icon">&#9888;</span> <!-- Warning Icon -->
+        <?= htmlspecialchars($error_message) ?>
+    </div>
+<?php endif; ?>
+
+<script>
+    // Function to hide the alert after 15 seconds
+    setTimeout(function() {
+        var alertBox = document.getElementById('error-alert');
+        if (alertBox) {
+            alertBox.style.display = 'none';
+        }
+    }, 15000); // 15 seconds (15000 milliseconds)
+</script>
+
+
         
         <!-- Budget Table -->
     <table>
@@ -400,7 +469,7 @@ footer .text-center {
                     </ul>
                 </div>
                 <div class="col-md-6 text-center">
-                    <p>&copy; 2024 Financial Management. All rights reserved.</p>
+                    <p>&copy; 2024 MegaCash. All rights reserved.</p>
                 </div>
             </div>
         </div>
