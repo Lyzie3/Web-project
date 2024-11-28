@@ -70,22 +70,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #F4F4F9;
             margin: 0;
             padding: 0;
+            height: 100vh;
+            background: linear-gradient(to right, rgba(75, 142, 141, 0.8), rgba(153, 102, 255, 0.2)), url('budget_background.jpg');
+            background-size: cover;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            position: relative;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.2); /* Slight shade */
+            z-index: 1;
         }
 
         form {
             width: 100%;
             max-width: 800px;
-            background-color: #fff;
+            background-color: rgba(255, 255, 255, 0.8);
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 2;
         }
 
         h1 {
@@ -158,31 +171,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: red;
             font-size: 0.9rem;
         }
-    </style>
-    <script>
-        function checkPasswordStrength(password) {
-            const strengthBar = document.getElementById('strength-bar-fill');
-            const strengthText = document.getElementById('strength-text');
-            const weakRegex = /^[a-zA-Z0-9]{6,}$/;
-            const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
-            if (strongRegex.test(password)) {
-                strengthBar.style.width = '100%';
-                strengthBar.style.backgroundColor = 'green';
-                strengthText.innerText = 'Strong';
-            } else if (weakRegex.test(password)) {
-                strengthBar.style.width = '50%';
-                strengthBar.style.backgroundColor = 'orange';
-                strengthText.innerText = 'Moderate';
-            } else {
-                strengthBar.style.width = '25%';
-                strengthBar.style.backgroundColor = 'red';
-                strengthText.innerText = 'Weak';
-            }
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
         }
-    </script>
+
+        .logo img {
+            width: 100px; /* Adjust logo size */
+        }
+    </style>
 </head>
 <body>
+    <!-- MegaCash Logo -->
+    <div class="logo">
+        <img src="megacash_logo.png" alt="MegaCash Logo"> <!-- Replace with your actual logo path -->
+    </div>
+
+    <!-- Background Overlay -->
+    <div class="overlay"></div>
+
     <form method="POST" action="register.php">
         <h1>Register</h1>
         <?php if ($error_message): ?>
@@ -220,14 +231,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label for="password">Password:</label>
         <input id="password" type="password" name="password" oninput="checkPasswordStrength(this.value)" required>
         <div class="strength-bar"><div id="strength-bar-fill"></div></div>
-        <p id="strength-text" class="strength-text">Password strength</p>
+        <p id="strength-text" class="strength-text">Password strength</p><br>
 
         <label>
-            <input type="checkbox" name="terms" required> I agree to the <a href="terms.php">Terms and Conditions</a> and <a href="privacy.php">Privacy Policy</a>.
+            <input type="checkbox" name="terms" required>
+            <p>I agree to the <a href="terms.php">Terms and Conditions</a> and <a href="privacy.php">Privacy Policy.</a></p>
         </label>
 
         <button type="submit">Register</button>
         <p>Already have an account? <a href="log_in.php">Login here</a></p>
     </form>
+
+    <script>
+        function checkPasswordStrength(password) {
+            const strengthBar = document.getElementById('strength-bar-fill');
+            const strengthText = document.getElementById('strength-text');
+            const weakRegex = /^[a-zA-Z0-9]{6,}$/;
+            const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+            if (strongRegex.test(password)) {
+                strengthBar.style.width = '100%';
+                strengthBar.style.backgroundColor = 'green';
+                strengthText.innerText = 'Strong';
+            } else if (weakRegex.test(password)) {
+                strengthBar.style.width = '50%';
+                strengthBar.style.backgroundColor = 'orange';
+                strengthText.innerText = 'Moderate';
+            } else {
+                strengthBar.style.width = '25%';
+                strengthBar.style.backgroundColor = 'red';
+                strengthText.innerText = 'Weak';
+            }
+        }
+    </script>
 </body>
 </html>
