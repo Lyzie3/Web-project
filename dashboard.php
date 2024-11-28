@@ -236,7 +236,7 @@ $expense_categories = $stmt_expense_categories->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- Main Content -->
     <div class="main-content">
-        <h1>Dashboard</h1>
+        <h1>Hello, you are welcome to the MegaCash Dashboard</h1>
         <p2>This website/app is designed to help university students keep track of their expenses, set budgets, and visualize their financial data.through graphs. It also aims to </p2>
         <p2>address key financial challenges faced by university students, such as: poor budgeting, overspending, and financial stress. Take advantage of this site responsively.</p2>
         <p2>Remember, managing your finances is a journey and your first step starts here. Below is the breakdown of your monthly budget and expenses for each category.</p2><br><br>
@@ -378,7 +378,7 @@ $expense_categories = $stmt_expense_categories->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- Footer Bottom -->
     <div class="text-center p-3" style="background-color: #f8f9fa; color: #4B8E8D;">
-        © 2024 Financial Management | Designed with ❤ for Students
+        © 2024 MegaCash | Designed with ❤ for Students
     </div>
 </footer>
 
