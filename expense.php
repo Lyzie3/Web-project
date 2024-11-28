@@ -42,58 +42,59 @@ try {
     die("Error fetching expenses: " . $e->getMessage());
 }
 
+// Fetch category-specific budgets
+try {
+    $budget_stmt = $conn->prepare("SELECT category, amount FROM budget WHERE user_id = :user_id");
+    $budget_stmt->execute([':user_id' => $user_id]);
+    $budgets = $budget_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Create a map for quick lookup of budgets
+    $category_budgets = [];
+    foreach ($budgets as $budget) {
+        $category_budgets[$budget['category']] = $budget['amount'];
+    }
+} catch (PDOException $e) {
+    die("Error fetching budgets: " . $e->getMessage());
+}
+
 // Handle Add, Edit, and Delete operations
+$error_message = '';
+
 if (isset($_POST['add_expense'])) {
     $category = $_POST['category'];
     $description = $_POST['description'];
     $amount = $_POST['amount'];
     $date = $_POST['date'];
 
+    // Calculate existing expenses in the category
     try {
-        $stmt = $conn->prepare("INSERT INTO expense (user_id, category, description, amount, date) VALUES (:user_id, :category, :description, :amount, :date)");
-        $stmt->execute([
-            ':user_id' => $user_id,
-            ':category' => $category,
-            ':description' => $description,
-            ':amount' => $amount,
-            ':date' => $date
-        ]);
-        header('Location: expense.php');
-        exit;
+        $expense_stmt = $conn->prepare("SELECT SUM(amount) AS total_expense FROM expense WHERE user_id = :user_id AND category = :category");
+        $expense_stmt->execute([':user_id' => $user_id, ':category' => $category]);
+        $total_expense = $expense_stmt->fetch(PDO::FETCH_ASSOC)['total_expense'] ?? 0;
     } catch (PDOException $e) {
-        die("Error adding expense: " . $e->getMessage());
+        die("Error fetching existing expenses: " . $e->getMessage());
     }
-}
 
-// Edit Expense
-if (isset($_POST['edit_expense'])) {
-    $expense_id = $_POST['expense_id'];
-    $stmt = $conn->prepare("SELECT * FROM expense WHERE id = :expense_id AND user_id = :user_id");
-    $stmt->execute([':expense_id' => $expense_id, ':user_id' => $user_id]);
-    $expense = $stmt->fetch(PDO::FETCH_ASSOC);
-}
-
-// Update Expense after edit
-if (isset($_POST['update_expense'])) {
-    $expense_id = $_POST['expense_id'];
-    $category = $_POST['category'];
-    $description = $_POST['description'];
-    $amount = $_POST['amount'];
-    $date = $_POST['date'];
-
-    try {
-        $stmt = $conn->prepare("UPDATE expense SET category = :category, description = :description, amount = :amount, date = :date WHERE id = :expense_id");
-        $stmt->execute([
-            ':expense_id' => $expense_id,
-            ':category' => $category,
-            ':description' => $description,
-            ':amount' => $amount,
-            ':date' => $date
-        ]);
-        header('Location: expense.php');
-        exit;
-    } catch (PDOException $e) {
-        die("Error updating expense: " . $e->getMessage());
+    // Check if the new expense exceeds the budget
+    $budget_limit = $category_budgets[$category] ?? 0; // Default to 0 if no budget set for the category
+    if ($total_expense + $amount > $budget_limit) {
+        $error_message = "Cannot add this expense. It exceeds the budget limit for '$category' (UGX " . number_format($budget_limit) . ").";
+    } else {
+        // Proceed to add the expense
+        try {
+            $stmt = $conn->prepare("INSERT INTO expense (user_id, category, description, amount, date) VALUES (:user_id, :category, :description, :amount, :date)");
+            $stmt->execute([
+                ':user_id' => $user_id,
+                ':category' => $category,
+                ':description' => $description,
+                ':amount' => $amount,
+                ':date' => $date
+            ]);
+            header('Location: expense.php');
+            exit;
+        } catch (PDOException $e) {
+            die("Error adding expense: " . $e->getMessage());
+        }
     }
 }
 
@@ -221,7 +222,7 @@ function exportPDF($expenses) {
 
         /* Image Style */
         .banner-img {
-            width: 100%;
+            width: 89%;
             height: 400px;
             margin-top: 20px;
             border-radius: 10px;
@@ -275,7 +276,7 @@ function exportPDF($expenses) {
                         <a class="nav-link" href="my_profile.php">Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="expense.php">Expense</a>
+                        <a class="nav-link active" href="expense.php">EXPENSE</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="budget.php">Budget</a>
@@ -297,11 +298,39 @@ function exportPDF($expenses) {
     <!-- Banner Image -->
     <img src="gold.jpg" alt="Banner Image" class="banner-img">
 
+    <?php if (!empty($error_message)): ?>
+    <div class="alert alert-danger" role="alert" id="error-message" style="display: none;">
+        <?= htmlspecialchars($error_message) ?>
+    </div>
+    <script>
+        // Show the error message with a fade-in effect
+        var errorMessage = document.getElementById('error-message');
+        errorMessage.style.display = 'block';
+        errorMessage.style.opacity = 0;
+        errorMessage.style.transition = 'opacity 1s ease-in-out';
+
+        setTimeout(function() {
+            errorMessage.style.opacity = 1;  // Fade in effect
+
+            setTimeout(function() {
+                errorMessage.style.opacity = 0; // Fade out effect
+            }, 8000);  // Wait for 8 seconds before starting the fade-out
+
+        }, 100); // Delay the fade-in effect slightly for a smoother transition
+
+        // Hide the error message after 15 seconds
+        setTimeout(function() {
+            errorMessage.style.display = 'none';
+        }, 10000); // 10000ms = 15 seconds
+    </script>
+<?php endif; ?>
+
+
     <!-- Main Content -->
     <div class="container mt-5">
         <h1>Track Expenses</h1>
         <p>You can know how you are spending your money on different categories of expenses and on which date. You can also export these details in the form of a PDF for personal use.</p>
-
+        
         <!-- Add Expense Form -->
         <form method="POST" action="">
             <div class="mb-3">
@@ -312,7 +341,6 @@ function exportPDF($expenses) {
                     <option value="Transportation">Transportation</option>
                     <option value="Utilities">Utilities</option>
                     <option value="Entertainment">Entertainment</option>
-                    <option value="Savings">Savings</option>
                     <option value="Health">Health</option>
                     <option value="Other">Other</option>
                 </select>
@@ -333,6 +361,7 @@ function exportPDF($expenses) {
         </form>
 
         <hr>
+        
 
         <!-- Search Bar Section -->
         <div class="row justify-content-center mb-4">
