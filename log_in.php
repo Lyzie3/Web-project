@@ -63,28 +63,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>User Login</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #F4F4F9;
-            margin: 0;
-            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            background-image: linear-gradient(to right, rgba(75, 142, 141, 0.8), rgba(153, 102, 255, 0.2)), url('budget_background.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-        }
-
-        h2 {
-            text-align: center;
-            color: #4B8E8D;
+            height: 100vh; /* Full viewport height */
+            margin: 0;
         }
 
         form {
             width: 100%;
             max-width: 400px;
-            background-color: #fff;
+            background-color:rgba(255, 255, 255, 0.8);
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            text-align: center;
+        }
+
+        h2 {
+            color: #4B8E8D;
         }
 
         form input[type="email"],
@@ -146,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <form action="log_in.php" method="POST">
-        <h2>Login</h2>
+        <h2>MegaCash Login</h2>
         <?php if ($error_message): ?>
             <p class="error"><?php echo $error_message; ?></p>
         <?php endif; ?>
