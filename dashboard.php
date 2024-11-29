@@ -61,6 +61,7 @@ $expense_categories = $stmt_expense_categories->fetchAll(PDO::FETCH_ASSOC);
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -177,6 +178,14 @@ $expense_categories = $stmt_expense_categories->fetchAll(PDO::FETCH_ASSOC);
             padding: 20px;
             flex: 1; /* Allow main content to grow and push footer down */
         }
+        
+        .carousel-inner img {
+            max-height: 85vh; /* Take up the full viewport height */
+            width: 87%; /* Ensure images take the full width */
+            object-fit: cover; /* Maintain the aspect ratio while covering the container */
+            display: block; /* Ensure proper centering within the carousel item */
+            margin: 0 auto; /* Center the image horizontally */
+        }
 
 
         .sidebar:hover ~ .main-content {
@@ -230,7 +239,7 @@ $expense_categories = $stmt_expense_categories->fetchAll(PDO::FETCH_ASSOC);
         <a href="budget.php"><i class="fas fa-wallet"></i><span>Budget</span></a>
         <a href="expense.php"><i class="fas fa-shopping-cart"></i><span>Expense</span></a>
         <a href="settings.php"><i class="fas fa-cog"></i><span>Settings</span></a>
-        <a href="notifications.php"><i class="fas fa-bell"></i><span>Notifications</span></a>
+        <a href="reports.php"><i class="fas fa-bell"></i><span>Notifications</span></a>
         <button class="logout-btn" onclick="location.href='log_out.php'"><i class="fas fa-sign-out-alt"></i><span>Logout</span></button>
     </div>
 
@@ -240,8 +249,7 @@ $expense_categories = $stmt_expense_categories->fetchAll(PDO::FETCH_ASSOC);
         <p2>This website/app is designed to help university students keep track of their expenses, set budgets, and visualize their financial data.through graphs. It also aims to </p2>
         <p2>address key financial challenges faced by university students, such as: poor budgeting, overspending, and financial stress. Take advantage of this site responsively.</p2>
         <p2>Remember, managing your finances is a journey and your first step starts here. Below is the breakdown of your monthly budget and expenses for each category.</p2><br><br>
-
-        <!-- Containers for Total Expense, Total Budget, and Month -->
+        
         <div class="container-cards">
             <div class="card">
                 <h4>Total Budget</h4>
@@ -256,6 +264,41 @@ $expense_categories = $stmt_expense_categories->fetchAll(PDO::FETCH_ASSOC);
                 <p><?php echo $current_month; ?></p>
             </div>
         </div>
+
+        <!-- Carousel -->
+        <div id="imageCarousel" class="carousel slide carousel-fade mb-4" data-bs-ride="carousel">
+
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="slide11.jpg" class="d-block w-90" alt="slide11.jpg">
+                </div>
+                <div class="carousel-item">
+                    <img src="slide12.jpg" class="d-block w-90" alt="slide12.jpg">
+                </div>
+                <div class="carousel-item">
+                    <img src="slide10.webp" class="d-block w-90" alt="slide10.webp">
+                </div>
+                <div class="carousel-item">
+                    <img src="slide13.png" class="d-block w-90" alt="slide13.png">
+                </div>
+                <div class="carousel-item">
+                    <img src="slide14.jpg" class="d-block w-90" alt="slide14.jpg">
+                </div>
+                
+            </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+
+
+        <!-- Containers for Total Expense, Total Budget, and Month -->
+        
 
         
         <h2> Budget vs Expense by ategory </h2>
@@ -378,7 +421,7 @@ $expense_categories = $stmt_expense_categories->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- Footer Bottom -->
     <div class="text-center p-3" style="background-color: #f8f9fa; color: #4B8E8D;">
-        © 2024 MegaCash | Designed with ❤ for Students
+        © 2024  | Designed with ❤ for Students
     </div>
 </footer>
 
