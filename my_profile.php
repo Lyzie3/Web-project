@@ -81,6 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+
+
 // Fetch notifications for the user
 $notifications = [];
 $query = "SELECT message, created_at FROM Notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT 10";
@@ -110,13 +112,15 @@ $conn->close();
         body {
             background-color: #e9f2f1;
             font-family: 'Poppins', sans-serif;
-            font-size: 18px;
+            font-size: 14px;
             color: #343a40;
         }
         .navbar {
             background-color: #4b8e8d;
             border-bottom: 3px solid #3e7271;
+            font-size:1.2rem;
         }
+        
         .navbar .navbar-brand, .navbar .nav-link {
             color: #fff;
         }
@@ -236,12 +240,12 @@ $conn->close();
 }
 
 .stat-budget {
-    background-color: #4caf50; /* Green for budget */
+    background-color: #4b8e8d; /* Green for budget */
     color: #ffffff;
 }
 
 .stat-expense {
-    background-color: #f44336; /* Red for remaining balance */
+    background-color: rgba(153, 102, 255, 0.2); /* Red for remaining balance */
     color: #ffffff;
 }
 
@@ -376,7 +380,7 @@ $conn->close();
                             <label for="profile_picture" class="form-label">Profile Picture</label>
                             <input type="file" id="profile_picture" name="profile_picture" class="form-control">
                         </div>
-                        <button type="submit" class="btn btn-primary">Update Image</button>
+                        <button type="submit" class="btn btn-primary">Update Image</button><br><br>
                     </form>
                     <?php if (!empty($error)): ?>
                         <div class="alert alert-danger mt-3"><?= htmlspecialchars($error) ?></div>
