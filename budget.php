@@ -83,6 +83,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['category'])) {
         $stmt->bind_param("is", $user_id, $message);
         $stmt->execute();
 
+        // Log the action in the user_logs table
+$log_sql = "INSERT INTO user_logs (user_id, action_type, action_description) 
+VALUES (?, 'update_profile', ?)";
+$log_stmt = $conn->prepare($log_sql);
+
+if ($log_stmt) {
+$description = "Updated profile details (e.g., name: $new_name, email: $new_email)";
+$log_stmt->bind_param("is", $user_id, $description);
+$log_stmt->execute();
+$log_stmt->close();
+} else {
+echo "Error logging action: " . $conn->error;
+}
+
+
+
         // Redirect to the same page to refresh the budget data
         header("Location: " . $_SERVER['PHP_SELF']);
         exit();
@@ -186,7 +202,7 @@ td {
 
 form {
     margin-top: 30px;
-    padding: 20px;
+    padding: 30px;
     background-color: rgba(255, 255, 255, 0.8); /* Slight transparency for form */
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -348,10 +364,10 @@ footer .text-center {
               <a class="nav-link" href="my_profile.php">Profile</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="settings.php">Settings</a>
+              <a class="nav-link" href="reports.php">Notifications</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="log_out.php">Logout</a>
+              <a class="nav-link" href="log_out.php">log out</a>
             </li>
           </ul>
         </div>
