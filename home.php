@@ -17,7 +17,7 @@
         body {
             font-family: 'Poppins', sans-serif;
             color: #333;
-            background-image: linear-gradient(to right, rgba(75, 142, 141, 0.8), rgba(153, 102, 255, 0.2)), url('budget_background.jpg');
+            background-image: linear-gradient(to right, rgba(75, 142, 141, 0.3), rgba(153, 102, 255, 0.2)), url('budget_background.jpg');
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
@@ -98,13 +98,17 @@
 
         h1 {
             font-size: 3rem;
-            color: rgba(153, 102, 255, 0.4);
+            color:white;
             margin-bottom: 1.5rem;
         }
-
+        
+        p2{
+            font-size:1.5rem;
+            color:#4b8e8d;
+        }
         p {
             font-size: 1.2rem;
-            color: #eaeaea;
+            color: #4b8e8d;
             margin-bottom: 2rem;
             line-height: 1.6;
         }
@@ -121,7 +125,7 @@
             flex: 1;
             max-width: 300px;
             padding: 1.5rem;
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(255, 255, 255, 0.7);
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             text-align: center;
@@ -201,8 +205,8 @@
         </nav>
     </header>
     <main>
-        <h1>This is MegaCash</h1>
-        <p>Take control of your finances with MegaCash. Track expenses, set budget goals, and secure your future with ease.</p><br><br>
+        <h1> MegaCash Welcomes You</h1>
+        <p2>Take control of your finances with MegaCash. Track expenses, set budget goals, and secure your future with ease.</p2><br><br>
         <div class="features">
             <div class="feature">
                 <h2>Track Expenses</h2>
@@ -218,6 +222,7 @@
             </div>
         </div>
         
+        <a  href="https://futureeducationmagazine.com/teach-money-management-to-students/">know more about finance management</a>
     </main>
     <footer>
         &copy; 2024 MegaCash. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
