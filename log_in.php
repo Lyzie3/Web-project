@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         body {
             font-family: 'Poppins', sans-serif;
             color: #333;
-            background-image: linear-gradient(to right, rgba(75, 142, 141, 0.8), rgba(153, 102, 255, 0.2)), url('budget_background.jpg');
+            background-image: linear-gradient(to right, rgba(75, 142, 141, 0.2), rgba(153, 102, 255, 0.3)), url('budget_background.jpg');
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
@@ -78,9 +78,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         form {
             width: 100%;
-            max-width: 400px;
+            max-width: 500px;
             background-color:rgba(255, 255, 255, 0.8);
-            padding: 20px;
+            padding: 50px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
             text-align: center;
