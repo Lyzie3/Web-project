@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin: 0;
             padding: 0;
             height: 100vh;
-            background: linear-gradient(to right, rgba(75, 142, 141, 0.8), rgba(153, 102, 255, 0.2)), url('budget_background.jpg');
+            background: linear-gradient(to right, rgba(75, 142, 141, 0.3), rgba(153, 102, 255, 0.3)), url('budget_background.jpg');
             background-size: cover;
             display: flex;
             justify-content: center;
